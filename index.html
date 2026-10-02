@@ -3,10 +3,9 @@
 <html lang="en">
 
 <head>
+    <meta charset="UTF-8">
 
 ```
-<meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>My GIS Web Map</title>
@@ -18,7 +17,6 @@
 >
 
 <style>
-
     html, body {
         margin: 0;
         padding: 0;
@@ -29,7 +27,6 @@
         width: 100%;
         height: 100%;
     }
-
 </style>
 ```
 
@@ -42,27 +39,23 @@
 <div id="map"></div>
 
 
-<!-- Load our layer configuration -->
+<!-- Load the layer configuration -->
 <script src="config/layers.js"></script>
 
 
-<!-- Load MapLibre and initialize the map -->
+<!-- Load MapLibre -->
 <script type="module">
 
     import * as maplibregl
         from 'https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.mjs';
 
 
-    // --------------------------------------------------
-    // CREATE THE MAP
-    // --------------------------------------------------
-
+    // Create the map
     const map = new maplibregl.Map({
 
         container: 'map',
 
-        style:
-            'https://demotiles.maplibre.org/style.json',
+        style: 'https://demotiles.maplibre.org/style.json',
 
         center: [0, 20],
 
@@ -71,16 +64,13 @@
     });
 
 
-    // --------------------------------------------------
-    // LOAD ALL GEOJSON LAYERS
-    // --------------------------------------------------
-
+    // Wait until the map has loaded
     map.on('load', () => {
 
+        // Loop through every layer defined in layers.js
         layers.forEach(layer => {
 
-
-            // Add the GeoJSON data source
+            // Add the GeoJSON source
             map.addSource(layer.id, {
 
                 type: 'geojson',
@@ -101,11 +91,9 @@
 
                 paint: {
 
-                    [layer.type + '-color']:
-                        layer.color,
+                    [layer.type + '-color']: layer.color,
 
-                    [layer.type + '-opacity']:
-                        layer.opacity
+                    [layer.type + '-opacity']: layer.opacity
 
                 }
 
@@ -115,13 +103,9 @@
 
     });
 
-
 </script>
 ```
 
 </body>
-
-</html>
-
 
 </html>
