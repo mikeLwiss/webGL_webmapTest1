@@ -10,18 +10,18 @@ const layers = [
     },
 
     {
-        id: 'protected-areas',
-        name: 'Protected Areas',
-        file: 'data/protected_areas.geojson',
+        id: 'AlbardaoNationalPark',
+        name: 'Albardao National Park',
+        file: 'data/AlbardaoNationalPark.geojson',
         type: 'fill',
         color: '#008000',
         opacity: 0.5
     },
 
     {
-        id: 'rivers',
-        name: 'Rivers',
-        file: 'data/rivers.geojson',
+        id: 'FernandodoNoronhaSeamountsandRocks',
+        name: 'Fernandodo Noronha Seamounts and Rocks',
+        file: 'data/FernandodoNoronhaSeamountsandRocks.geojson',
         type: 'line',
         color: '#0066cc',
         opacity: 1
