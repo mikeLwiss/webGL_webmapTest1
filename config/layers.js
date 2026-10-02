@@ -42,6 +42,16 @@ const layers = [
         opacity: 0.35,
         outlineColor: '#0d4787',
         outlineOpacity: 1
+    },
+    
+    {
+        id: 'wdpa',
+        name: 'Protected Areas',
+        url: 'https://data-gis.unep-wcmc.org/server/rest/services/ProtectedSites/The_World_Database_of_Protected_Areas/FeatureServer/1',
+        type: 'fill',
+        color: '#0d4787',
+        opacity: 0.35,
+        outlineColor: '#0d4787'
     }
 
 ];
