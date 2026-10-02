@@ -3,16 +3,21 @@
 
 <head>
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>My GIS Web Map</title>
+
 
     <!-- MapLibre CSS -->
     <link
         rel="stylesheet"
         href="https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.css"
     >
-    
+
+
     <style>
+
         html, body {
             margin: 0;
             padding: 0;
@@ -23,84 +28,230 @@
             width: 100%;
             height: 100%;
         }
+
     </style>
+
 </head>
 
+
 <body>
+
 
     <!-- Map container -->
     <div id="map"></div>
 
-    <!-- Load the layer configuration -->
-   <script src="config/layers.js"></script>
 
-<script type="module">
+    <!-- Load layer configuration -->
+    <script src="config/layers.js"></script>
 
-    import * as maplibregl
-        from 'https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.mjs';
 
-    const map = new maplibregl.Map({
-        container: 'map',
-        style: 'https://tiles.openfreemap.org/styles/liberty',
-        center: [0, 20],
-        zoom: 2
-    });
+    <!-- Load MapLibre -->
+    <script type="module">
 
-    map.on('load', async () => {
-        for (const layer of layers) {
-            let geojson;
+        import * as maplibregl
+            from 'https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.mjs';
 
-            // --------------------------------------------------
-            // LOCAL GEOJSON FILE
-            // --------------------------------------------------
-            if (layer.file) {
-                const response = await fetch(layer.file);
-                geojson = await response.json();
-            }
 
-            // --------------------------------------------------
-            // ARCGIS FEATURE SERVICE
-            // --------------------------------------------------
-            if (layer.url) {
-                const queryUrl =
-                    layer.url +
-                    '/query' +
-                    '?where=1%3D1' +
-                    '&outFields=*' +
-                    '&returnGeometry=true' +
-                    '&f=geojson';
-                const response = await fetch(queryUrl);
-                geojson = await response.json();
-            }
+        // --------------------------------------------------
+        // CREATE MAP
+        // --------------------------------------------------
 
-            // --------------------------------------------------
-            // ADD SOURCE
-            // --------------------------------------------------
-            map.addSource(layer.id, {
-                type: 'geojson',
-                data: geojson
-            });
+        const map = new maplibregl.Map({
 
-            // --------------------------------------------------
-            // ADD MAP LAYER
-            // --------------------------------------------------
-            map.addLayer({
-                id: layer.id,
-                type: layer.type,
-                source: layer.id,
-                paint: {
-                    'fill-color': layer.color,
-                    'fill-opacity': layer.opacity,
-                    'fill-outline-color': layer.outlineColor
+            container: 'map',
+
+            style: 'https://tiles.openfreemap.org/styles/liberty',
+
+            center: [0, 20],
+
+            zoom: 2
+
+        });
+
+
+        // --------------------------------------------------
+        // LOAD LAYERS AFTER MAP LOADS
+        // --------------------------------------------------
+
+        map.on('load', async () => {
+
+
+            // Loop through each layer in layers.js
+            for (const layer of layers) {
+
+
+                let geojson;
+
+
+                // --------------------------------------------------
+                // LOCAL GEOJSON FILE
+                // --------------------------------------------------
+
+                if (layer.file) {
+
+                    console.log(
+                        'Loading local GeoJSON:',
+                        layer.name
+                    );
+
+
+                    const response = await fetch(layer.file);
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            `Could not load ${layer.file}: ` +
+                            `${response.status} ${response.statusText}`
+                        );
+
+                    }
+
+
+                    geojson = await response.json();
+
+
+                    console.log(
+                        `${layer.name}:`,
+                        geojson.features?.length,
+                        'features loaded'
+                    );
+
                 }
-            });
-        }
-    });
-</script>
+
+
+                // --------------------------------------------------
+                // ARCGIS FEATURE SERVICE
+                // --------------------------------------------------
+
+                if (layer.url) {
+
+
+                    // ArcGIS REST query
+                    // Limit the test to 10 features
+
+                    const queryUrl =
+                        layer.url +
+                        '/query' +
+                        '?where=1%3D1' +
+                        '&outFields=*' +
+                        '&returnGeometry=true' +
+                        '&resultRecordCount=10' +
+                        '&f=geojson';
+
+
+                    console.log(
+                        'Querying ArcGIS Feature Service:',
+                        queryUrl
+                    );
+
+
+                    const response = await fetch(queryUrl);
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            `ArcGIS request failed: ` +
+                            `${response.status} ${response.statusText}`
+                        );
+
+                    }
+
+
+                    geojson = await response.json();
+
+
+                    console.log(
+                        `${layer.name}:`,
+                        geojson.features?.length,
+                        'features returned from ArcGIS'
+                    );
+
+
+                    // Check whether ArcGIS returned an error
+
+                    if (geojson.error) {
+
+                        console.error(
+                            'ArcGIS returned an error:',
+                            geojson.error
+                        );
+
+                        return;
+
+                    }
+
+                }
+
+
+                // --------------------------------------------------
+                // MAKE SURE WE RECEIVED DATA
+                // --------------------------------------------------
+
+                if (!geojson) {
+
+                    console.warn(
+                        `No data returned for layer: ${layer.name}`
+                    );
+
+                    continue;
+
+                }
+
+
+                // --------------------------------------------------
+                // ADD GEOJSON SOURCE
+                // --------------------------------------------------
+
+                map.addSource(layer.id, {
+
+                    type: 'geojson',
+
+                    data: geojson
+
+                });
+
+
+                // --------------------------------------------------
+                // ADD MAP LAYER
+                // --------------------------------------------------
+
+                map.addLayer({
+
+                    id: layer.id,
+
+                    type: layer.type,
+
+                    source: layer.id,
+
+                    paint: {
+
+                        'fill-color': layer.color,
+
+                        'fill-opacity': layer.opacity,
+
+                        'fill-outline-color': layer.outlineColor
+
+                    }
+
+                });
+
+
+                console.log(
+                    `Map layer added: ${layer.name}`
+                );
+
+            }
+
+
+            console.log('All layers finished loading.');
+
+        });
+
+
+    </script>
+
 </body>
 
-</script>
-```
-</html>
-</body>
 </html>
