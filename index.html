@@ -1,82 +1,110 @@
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-```
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My GIS Web Map</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My GIS Web Map</title>
 
-<!-- MapLibre CSS -->
-<link
-    rel="stylesheet"
-    href="https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.css"
->
-<style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-    }
-    #map {
-        width: 100%;
-        height: 100%;
-    }
-</style>
-```
+    <!-- MapLibre CSS -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.css"
+    >
+    
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
+
 <body>
-```
-<!-- Map container -->
-<div id="map"></div>
 
-<!-- Load the layer configuration -->
-<script src="config/layers.js"></script>
+    <!-- Map container -->
+    <div id="map"></div>
 
-<!-- Load MapLibre -->
-<script type="module">
+    <!-- Load the layer configuration -->
+    <script src="config/layers.js"></script>
 
-    import * as maplibregl
-        from 'https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.mjs';
+    <!-- Load MapLibre -->
+    <script type="module">
 
-    // Create the map
-    const map = new maplibregl.Map({
+        import * as maplibregl
+            from 'https://unpkg.com/maplibre-gl@6.11.2/dist/maplibre-gl.mjs';
 
-        container: 'map',
-        style: 'https://demotiles.maplibre.org/style.json',
-        center: [0, 20],
-        zoom: 2
-    });
+        // Create the map
+        const map = new maplibregl.Map({
+            container: 'map',
+            // Start with a minimal empty style
+            style: {
+                version: 8,
+                sources: {},
+                layers: []
+            },
+            center: [0, 20],
+            zoom: 2
+        });
 
+        // Wait until the map has loaded
+        map.on('load', () => {
 
-    // Wait until the map has loaded
-    map.on('load', () => {
+            // --------------------------------------------------
+            // OpenStreetMap basemap
+            // --------------------------------------------------
 
-        // Loop through every layer defined in layers.js
-        layers.forEach(layer => {
+            map.addSource('osm', {
+                type: 'raster',
+                tiles: [
+                    'https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+                ],
+                tileSize: 256,
+                attribution:
+                    '© OpenStreetMap contributors'
+            });
 
-            // Add the GeoJSON source
-            map.addSource(layer.id, {
-                type: 'geojson',
-                data: layer.file
+            map.addLayer({
+                id: 'osm-basemap',
+                type: 'raster',
+                source: 'osm'
             });
 
 
-            // Add the layer to the map
-            map.addLayer({
-                id: layer.id,
-                type: layer.type,
-                source: layer.id,
-               paint: {
-                'fill-color': layer.color,
-                'fill-opacity': layer.opacity,
-                'fill-outline-color': layer.outlineColor
-}
+            // --------------------------------------------------
+            // Add your GeoJSON layers
+            // --------------------------------------------------
+
+            layers.forEach(layer => {
+
+                // Add the GeoJSON source
+                map.addSource(layer.id, {
+                    type: 'geojson',
+                    data: layer.file
+                });
+
+                // Add the polygon layer
+                map.addLayer({
+                    id: layer.id,
+                    type: 'fill',
+                    source: layer.id,
+                    paint: {
+                        'fill-color': layer.color,
+                        'fill-opacity': layer.opacity,
+                        'fill-outline-color': layer.outlineColor
+                    }
+                });
             });
         });
-    });
+    </script>
+</body>
 
-</script>
-```
+</html>
 </body>
 </html>
