@@ -19,9 +19,9 @@ const layers = [
     },
 
     {
-        id: 'FernandodoNoronhaSeamountsandRocks',
-        name: 'Fernandodo Noronha Seamounts and Rocks',
-        file: 'data/FernandodoNoronhaSeamountsandRocks.geojson',
+        id: 'NaturalMonumentSãoPedroandSãoPaulo',
+        name: 'Natural Monument São Pedro and SãoPaulo',
+        file: 'data/NaturalMonumentSãoPedroandSãoPaulo.geojson',
         type: 'line',
         color: '#0066cc',
         opacity: 1
