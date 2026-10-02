@@ -5,7 +5,7 @@ const layers = [
         name: 'Abrohols Seascape',
         file: 'data/AbroholsSeascape.geojson',
         type: 'fill',
-        color: '#cccccc',
+        color: '#0d4787',
         opacity: 1
     },
 
@@ -14,7 +14,7 @@ const layers = [
         name: 'Albardao National Park',
         file: 'data/AlbardaoNationalPark.geojson',
         type: 'fill',
-        color: '#008000',
+        color: '#0d4787',
         opacity: 1
     },
 
@@ -22,8 +22,8 @@ const layers = [
         id: 'NaturalMonumentSãoPedroandSãoPaulo',
         name: 'Natural Monument São Pedro and SãoPaulo',
         file: 'data/NaturalMonumentSãoPedroandSãoPaulo.geojson',
-        type: 'line',
-        color: '#0066cc',
+        type: 'fill',
+        color: '#0d4787',
         opacity: 1
     },
 
@@ -31,8 +31,8 @@ const layers = [
         id: 'NaturalMonumentTrindadeandMartimVazandColumbiaSeamount',
         name: 'Natural Monument Trindade and Martim Vaz and Columbia Seamount',
         file: 'data/NaturalMonumentTrindadeandMartimVazandColumbiaSeamount.geojson',
-        type: 'line',
-        color: '#0066cc',
+        type: 'fill',
+        color: '#0d4787',
         opacity: 1
     }
 
