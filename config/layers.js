@@ -6,7 +6,9 @@ const layers = [
         file: 'data/AbroholsSeascape.geojson',
         type: 'fill',
         color: '#0d4787',
-        opacity: 1
+        opacity: 0.35,
+        outlineColor: '#0d4787',
+        outlineOpacity: 1
     },
 
     {
@@ -15,7 +17,9 @@ const layers = [
         file: 'data/AlbardaoNationalPark.geojson',
         type: 'fill',
         color: '#0d4787',
-        opacity: 1
+        opacity: 0.35,
+        outlineColor: '#0d4787',
+        outlineOpacity: 1
     },
 
     {
@@ -24,7 +28,9 @@ const layers = [
         file: 'data/NaturalMonumentSãoPedroandSãoPaulo.geojson',
         type: 'fill',
         color: '#0d4787',
-        opacity: 1
+        opacity: 0.35,
+        outlineColor: '#0d4787',
+        outlineOpacity: 1
     },
 
     {
@@ -33,7 +39,9 @@ const layers = [
         file: 'data/NaturalMonumentTrindadeandMartimVazandColumbiaSeamount.geojson',
         type: 'fill',
         color: '#0d4787',
-        opacity: 1
+        opacity: 0.35,
+        outlineColor: '#0d4787',
+        outlineOpacity: 1
     }
 
 ];
