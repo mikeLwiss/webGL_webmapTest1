@@ -29,6 +29,34 @@
             height: 100%;
         }
 
+    #layer-control {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+        background: white;
+        padding: 12px;
+        border-radius: 5px;
+        box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+        font-family: Arial, sans-serif;
+        font-size: 14px;
+        max-height: 70vh;
+        overflow-y: auto;
+        min-width: 150px;
+    }
+    
+    #layer-control strong {
+        display: block;
+        margin-bottom: 10px;
+    }
+    
+    .layer-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin: 8px 0;
+        cursor: pointer;
+    }
     </style>
 
 </head>
@@ -40,7 +68,13 @@
     <!-- Map container -->
     <div id="map"></div>
 
+    <!-- Layer visibility control -->
+    <div id="layer-control">
+        <strong>Map Layers</strong>
+        <div id="layer-checkboxes"></div>
+    </div>
 
+    
     <!-- Load layer configuration -->
     <script src="config/layers.js"></script>
 
@@ -244,7 +278,42 @@
 
             }
 
+        // Create a checkbox for each configured map layer
+const checkboxContainer = document.getElementById('layer-checkboxes');
 
+layers.forEach(layer => {
+
+    // Skip layers that were not successfully added to the map
+    if (!map.getLayer(layer.id)) {
+        return;
+    }
+
+    const label = document.createElement('label');
+    label.className = 'layer-checkbox';
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.checked = true;
+
+    checkbox.addEventListener('change', () => {
+
+        map.setLayoutProperty(
+            layer.id,
+            'visibility',
+            checkbox.checked ? 'visible' : 'none'
+        );
+
+    });
+
+    const text = document.createElement('span');
+    text.textContent = layer.name;
+
+    label.appendChild(checkbox);
+    label.appendChild(text);
+    checkboxContainer.appendChild(label);
+
+});
+            
             console.log('All layers finished loading.');
 
         });
